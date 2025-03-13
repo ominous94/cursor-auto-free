@@ -21,7 +21,7 @@ class EmailVerificationHandler:
         self.protocol = Config().get_protocol() or 'POP3'
         self.account = account
 
-    def get_verification_code(self, max_retries=5, retry_interval=60):
+    def get_verification_code(self, max_retries=2, retry_interval=30):
         """
         获取验证码，带有重试机制。
 
@@ -60,9 +60,11 @@ class EmailVerificationHandler:
                     logging.error(f"发生错误，{retry_interval} 秒后重试...")
                     time.sleep(retry_interval)
                 else:
-                    raise Exception(f"获取验证码失败且已达最大重试次数: {e}") from e
+                    #raise Exception(f"获取验证码失败且已达最大重试次数: {e}") from e
+                    return None
 
-        raise Exception(f"经过 {max_retries} 次尝试后仍未获取到验证码。")
+        #raise Exception(f"经过 {max_retries} 次尝试后仍未获取到验证码。")
+        return None
 
     # 使用imap获取邮件
     def _get_mail_code_by_imap(self, retry = 0):
